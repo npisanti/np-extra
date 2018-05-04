@@ -1,0 +1,24 @@
+<group>
+	<phazor_0>
+		<speed>0.135</speed>
+		<oneshote>0</oneshote>
+		<retrig_button>0</retrig_button>
+	</phazor_0>
+	<phazor_1>
+		<speed>0.265</speed>
+		<oneshote>0</oneshote>
+		<retrig_button>0</retrig_button>
+	</phazor_1>
+	<linked_int>75</linked_int>
+	<linked_float>0.56</linked_float>
+	<m0-_linked_int>
+		<active>1</active>
+		<base>48</base>
+		<mod>144</mod>
+	</m0-_linked_int>
+	<m1-_linked_float>
+		<active>1</active>
+		<base>0.365714</base>
+		<mod>0.56</mod>
+	</m1-_linked_float>
+</group>
