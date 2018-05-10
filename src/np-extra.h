@@ -14,3 +14,5 @@
 #include "serializers/serialize_points.h"
 #include "serializers/serialize_polylines.h"
 
+#include "playlist/Playlist.h"
+#include "playlist/RandomPaths.h"
