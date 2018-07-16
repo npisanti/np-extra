@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "alphamasker/AlphaMasker.h"
-
 #include "colors/Palette3.h"
 #include "colors/Palette4.h"
 #include "colors/Palette6.h"
