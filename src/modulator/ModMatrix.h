@@ -9,16 +9,13 @@ class ModMatrix{
 
 public:
     
-    ModMatrix();
-    ~ModMatrix();
+    void setup( int slotnum, std::string name = "modulation matrix" );
 
-    void link( const float & source, ofParameter<float> & dest, std::string name );
-    void link( const float & source, ofParameter<int> & dest, std::string name );
-    void link( const float & source, ofParameter<float> & dest );
-    void link( const float & source, ofParameter<int> &dest );
-    
-    
-    np::Modulator & slot( int index );
+    void addSource( const float & source, std::string name );
+    void addDestination( ofParameter<float> & param, std::string name );
+    void addDestination( ofParameter<int> & param, std::string name );
+    void addDestination( ofParameter<float> & param );
+    void addDestination( ofParameter<int> & param );
     
     void update();
 
@@ -28,14 +25,48 @@ public:
 
     
 private:
-    class Slot{
-    public:
-        Slot();
+    struct Slot{
+        ofParameterGroup parameters;
+            ofParameter<bool> bActive;
+            ofParameter<int> source;
+            ofParameter<std::string> sourceLabel;
+            ofParameter<int> destination;
+            ofParameter<std::string> destinationLabel;
+            ofParameter<float> tMin;
+            ofParameter<float> tMax;
+            ofParameter<float> dMin;
+            ofParameter<float> dMax;
+    };
+
+    struct Source{
         const float * source;
-        np::Modulator * modulator;
+        std::string label;
+    };
+
+    class Destination{
+    public:
+        Destination();
+        void link( ofParameter<float> & param );
+        void link( ofParameter<int> & param );
+        void set( float & value );
+        
+        float getMin() const;
+        float getMax() const;
+       
+        std::string label;
+    private:
+        int mode;
+        ofParameter<float> * fDest;
+        ofParameter<int> * iDest;
     };
 
     std::vector<Slot> slots;
+    std::vector<Source> sources;
+    std::vector<Destination> destinations;
+    
+    
+    void onSourceChange( int & value );
+    void onDestinationChange( int & value );
     
 };
     
