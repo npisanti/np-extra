@@ -16,7 +16,9 @@ np::Phasor::Phasor() {
 
     retrig.addListener( this, &Phasor::onRetrigParameter);
     
-	ofAddListener( ofEvents().update, this, &Phasor::update);  
+	ofAddListener( ofEvents().update, this, &Phasor::update); 
+    
+    maxspeed = 6.0f; 
 }
 
     
@@ -97,5 +99,5 @@ void np::Phasor::onRetrigParameter( bool & value ) {
 	}
 }
 void np::Phasor::onSpeedParameter( float & value ) {
-	speedCalculated = (value*value)*6.0f;
+	speedCalculated = (value*value)*maxspeed;
 }

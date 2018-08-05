@@ -7,10 +7,10 @@ namespace np{
     
 /*
     // to add a listener: 
-    phazor.bEvent = true;
-    ofAddListener( phazor.event, this, &ofApp::phazorEvent);
+    phasor.bEvent = true;
+    ofAddListener( phasor.event, this, &ofApp::phasorEvent);
 	// the methods to pass should be like this
-    void phazorEvent( float & value ){ }
+    void phasorEvent( float & value ){ }
  */     
     
 class Phasor {
@@ -36,6 +36,8 @@ public:
     
     ofEvent<float>  event;
     bool            bEvent;
+    
+    float maxspeed;
     
 private:
 

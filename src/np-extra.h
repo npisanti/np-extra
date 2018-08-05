@@ -9,6 +9,9 @@
 
 #include "phasor/Phasor.h"
 
+#include "modulator/Modulator.h"
+#include "modulator/ModMatrix.h"
+
 #include "serializers/serialize_points.h"
 #include "serializers/serialize_polylines.h"
 

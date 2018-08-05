@@ -8,11 +8,12 @@ void ofApp::setup(){
     
     lines.reserve(128);
 	lines.clear();
-	
+    max = 0;
+    	
     bLight = false;
     bFill = false;
     bShowHelp = true;
-    max = 0;
+
     
     ofSetWindowTitle( "polylines<-->xml / mapping tool" );
     
