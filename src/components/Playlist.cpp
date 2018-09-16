@@ -1,6 +1,9 @@
 
 #include "Playlist.h"
 
+
+// ------------------ np::Playlist ----------------------------------
+
 np::Playlist::Playlist(){
     b = 0;
     v = 0;
@@ -84,4 +87,43 @@ void np::Playlist::draw( int x, int y, float scale ){
 
     buffers[b].update();    
     buffers[b].draw( x, y, buffers[b].getWidth()*scale, buffers[b].getHeight()*scale );
+}
+
+
+
+
+// ------------------ np::Playlist::RandomPaths ---------------------
+const std::string np::Playlist::RandomPaths::wrong = "wrong mode";
+
+np::Playlist::RandomPaths::RandomPaths(){
+    index = 0;
+    mode = 0;
+}
+
+
+void np::Playlist::RandomPaths::add( std::string path ){
+    paths.push_back( path );
+    ofLogVerbose()<<"[random paths] adding folder "<<path<<"\n";
+    index = rand()%paths.size();
+}
+
+
+const std::string & np::Playlist::RandomPaths::next(){
+    
+    switch(mode){
+        case 0:
+        {
+            int ni = index;
+            while( ni == index ){ // this could be slow if there are few paths
+                ni = rand()%paths.size();
+            }
+            index = ni;
+            return paths[index];
+        }
+        break;
+        
+        default: break;
+    }
+    
+    return wrong;
 }

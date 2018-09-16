@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "np-extra.h"
+#include "components/Playlist.h"
 
 class ofApp : public ofBaseApp{
 	public:
@@ -22,5 +22,5 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
         
         std::vector<np::Playlist> videos;
-        std::vector<np::RandomPaths> paths;
+        std::vector<np::Playlist::RandomPaths> paths;
 };

@@ -1,4 +1,7 @@
 
+// Phasor.cpp
+// Nicola Pisanti, MIT License, 2018
+
 
 #include "Phasor.h"
 

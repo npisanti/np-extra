@@ -2,13 +2,18 @@
 #pragma once
 
 #include "ofMain.h"
-#include "PathGiver.h"
 
 namespace np{
     
+
 class Playlist {
-  
-public:
+
+
+public: // ------------------ public API ----------------------------
+    class PathGiver{ 
+        public: virtual const std::string & next()=0; 
+    };
+
     Playlist();
     
     void setup( PathGiver & paths );
@@ -31,7 +36,26 @@ public:
 
     ofParameter<float> speed;
 
-private:
+
+public: // --------------- basic PathGiver --------------------------
+
+    class RandomPaths : public PathGiver {
+        
+        public:
+            RandomPaths();
+
+            void add( std::string path );
+            const std::string & next() override;
+            
+        private:
+            std::vector<std::string> paths;
+            static const std::string wrong;
+            
+            int index;
+            int mode;
+    };
+
+private:  // --------------------------------------------------------
     std::vector<int> vindex;
     
     void change();

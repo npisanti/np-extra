@@ -18,8 +18,8 @@ void np::PaletteTable::setup ( int numPalettes, int numColors  ) {
     
     parameters.setName("palette table");    
 
-    tIndex.addListener( this, &PaletteTable::indexChange );    
-    parameters.add( tIndex.set( "table index", 0.0f, 0.0f, numPalettes-1) ); 
+    cursor.addListener( this, &PaletteTable::indexChange );    
+    parameters.add( cursor.set( "table cursor", 0.0f, 0.0f, numPalettes-1) ); 
 
     for( int x=0; x<palettes.size(); ++x){
         palettes[x].setName( "palette "+ofToString(x) );
@@ -31,7 +31,7 @@ void np::PaletteTable::setup ( int numPalettes, int numColors  ) {
         parameters.add( palettes[x] );
     }
     
-    float ok = tIndex;
+    float ok = cursor;
     indexChange( ok );
     
     
@@ -41,7 +41,7 @@ void np::PaletteTable::setup ( int numPalettes, int numColors  ) {
 }
 
 void np::PaletteTable::refreshColor( ofColor & value ) {
-    float ok = tIndex;
+    float ok = cursor;
     indexChange( ok );
 }
 
@@ -53,9 +53,9 @@ void np::PaletteTable::indexChange( float & value ) {
     }
 }
 
-void np::PaletteTable::roundIndex() {
-    int i = tIndex;
-    tIndex = i;
+void np::PaletteTable::round() {
+    int i = cursor;
+    cursor = i;
 }
 
 const ofColor & np::PaletteTable::color( int index ) const {

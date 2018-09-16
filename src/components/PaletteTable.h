@@ -11,11 +11,11 @@ public:
     void setup ( int numPalettes, int numColors=1 );
 
     const ofColor & color( int index = 0 ) const;
-    void            roundIndex();
+    void            round(); // rounds cursor
 
     ofParameterGroup    parameters;
 
-    ofParameter<float>                              tIndex;    
+    ofParameter<float>                              cursor;    
     std::vector<std::vector<ofParameter<ofColor>>>  colors;  
     std::vector<ofParameterGroup> palettes;
     

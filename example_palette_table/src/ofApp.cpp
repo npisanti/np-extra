@@ -1,7 +1,4 @@
 
-// app_color_studies
-// Nicola Pisanti, GPLv3 License, 2016
-
 #include "ofApp.h"
 
 //--------------------------------------------------------------

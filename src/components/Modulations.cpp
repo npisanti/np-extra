@@ -1,4 +1,7 @@
 
+// Modulations.cpp
+// Nicola Pisanti, MIT License, 2018
+
 #include "Modulations.h"
 
 // ---------------------- np::Modulator -----------------------------
