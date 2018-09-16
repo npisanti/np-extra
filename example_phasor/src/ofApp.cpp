@@ -24,7 +24,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    //for( auto & phazor : phasors ) phazor.update();
+    for( auto & phazor : phasors ) phazor.update();
 }
 
 //--------------------------------------------------------------

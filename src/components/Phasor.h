@@ -18,7 +18,7 @@ class Phasor {
 public:
     Phasor();
     
-    void update( ofEventArgs & events );
+    void update();
     void retrigger();
     void retrigger( float startphase );
     float phase() const;
@@ -39,7 +39,11 @@ public:
     
     float maxspeed;
     
+    // enable automatic updating
+    void autoupdate();
+    
 private:
+    inline void update( ofEventArgs & events ) { update(); }
 
     float 	speedCalculated;    
     bool    bReached;

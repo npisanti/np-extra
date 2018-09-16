@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#include "np-extra.h"
+#include "components/PaletteTable.h"
 
 class ofApp : public ofBaseApp{
 
@@ -25,6 +25,6 @@ class ofApp : public ofBaseApp{
 
         ofxPanel gui;
                 
-        np::Palette6 palette;
+        np::PaletteTable palette;
 
 };

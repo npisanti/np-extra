@@ -16,18 +16,19 @@ np::Phasor::Phasor() {
 
     retrig.addListener( this, &Phasor::onRetrigParameter);
     
-	ofAddListener( ofEvents().update, this, &Phasor::update); 
-    
     maxspeed = 6.0f; 
 }
 
+void np::Phasor::autoupdate(){
+	ofAddListener( ofEvents().update, this, &Phasor::update); 
+}
     
 ofParameterGroup & np::Phasor::label( std::string name ){
     parameters.setName(name);
     return parameters;
 }
 
-void np::Phasor::update( ofEventArgs & events ) {
+void np::Phasor::update() {
     if( !bReached ){
 		float step = abs(speedCalculated) * ofGetLastFrameTime();
 		

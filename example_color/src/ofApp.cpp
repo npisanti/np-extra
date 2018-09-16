@@ -7,14 +7,16 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-    ofSetWindowTitle( "color studies" );
+    ofSetWindowTitle( "color palettes" );
     ofDisableAntiAliasing();
 
-    gui.setup ( "panel" );
-    gui.add( palette.ui );
-    gui.add( palette.testUi );
+    palette.setup( 2, 3 );
 
-    gui.setPosition( ofGetWidth() - 260, 80 );
+    gui.setup ( "panel", "settings.xml" );
+    gui.add( palette.parameters );
+    gui.add( palette.test );
+
+    gui.setPosition( ofGetWidth() - 260, 20 );
 
 }
 

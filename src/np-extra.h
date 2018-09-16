@@ -1,19 +1,13 @@
 
 #pragma once
 
-#include "colors/Palette3.h"
-#include "colors/Palette4.h"
-#include "colors/Palette6.h"
-#include "colors/PaletteTable.h"
-#include "colors/PaletteTableRGB.h"
+#include "components/Phasor.h"
+#include "components/Modulation.h"
+#include "components/PaletteTable.h"
 
-#include "phasor/Phasor.h"
 
-#include "modulator/Modulator.h"
-#include "modulator/ModMatrix.h"
-
-#include "serializers/serialize_points.h"
-#include "serializers/serialize_polylines.h"
+#include "serializers/serialize_points.hpp"
+#include "serializers/serialize_polylines.hpp"
 
 #include "playlist/Playlist.h"
 #include "playlist/RandomPaths.h"
