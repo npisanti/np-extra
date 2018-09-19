@@ -8,10 +8,10 @@ void np::PaletteTable::setup ( int numPalettes, int numColors  ) {
     
     colors.resize(numPalettes+1);
     palettes.resize( numPalettes );
-    for( size_t x=0; x<colors.size(); ++x){
+    for( size_t x=0; x<colors.size(); ++x ){
         colors[x].resize( numColors );
     }
-    for( size_t y=0; y<colors[numPalettes].size(); ++y){
+    for( size_t y=0; y<colors[numPalettes].size(); ++y ){
         colors[numPalettes][y] = ofColor::black;
     }
     tColors.resize( numColors );
@@ -21,10 +21,10 @@ void np::PaletteTable::setup ( int numPalettes, int numColors  ) {
     cursor.addListener( this, &PaletteTable::indexChange );    
     parameters.add( cursor.set( "table cursor", 0.0f, 0.0f, numPalettes-1) ); 
 
-    for( int x=0; x<palettes.size(); ++x){
+    for( size_t x=0; x<palettes.size(); ++x ){
         palettes[x].setName( "palette "+ofToString(x) );
         
-        for( size_t y=0; y<colors[x].size(); ++y){
+        for( size_t y=0; y<colors[x].size(); ++y ){
             palettes[x].add( colors[x][y].set( "color " + ofToString(y), ofColor(255), ofColor(0), ofColor(255)) );
              colors[x][y].addListener( this, &PaletteTable::refreshColor );  
         }
@@ -83,7 +83,7 @@ void np::PaletteTable::draw( int x, int y, int w, int h) {
             ofNoFill();
         }
         
-        for (int y=0; y<tColors.size(); ++y){
+        for( size_t y=0; y<tColors.size(); ++y ){
             ofSetColor( color(y), testAlpha );            
             ofDrawRectangle ( xoff, yoff + y*2*sidey, sidex, sidey );
         }

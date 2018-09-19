@@ -1,11 +1,12 @@
 
-#pragma once
+#ifndef NPEXTRA_SERIALIZE_POINTS_H
+#define NPEXTRA_SERIALIZE_POINTS_H
 
 #include "ofMain.h"
 
 namespace np {
 
-    void serialize_points( std::string path, const std::vector<glm::vec3> & v ) {
+    inline void serialize_points( std::string path, const std::vector<glm::vec3> & v ) {
 
         ofXml xml; 
         ofXml points = xml.appendChild("points"); 
@@ -22,7 +23,7 @@ namespace np {
         }
     }
 
-    void deserialize_points( std::string path, std::vector<glm::vec3> & v ) {
+    inline void deserialize_points( std::string path, std::vector<glm::vec3> & v ) {
 
         ofXml xml;
 
@@ -51,7 +52,7 @@ namespace np {
 
 
 
-    void serialize_points( std::string path, const std::vector<ofVec3f> & v ) {
+    inline void serialize_points( std::string path, const std::vector<ofVec3f> & v ) {
 
         ofXml xml; 
         ofXml points = xml.appendChild("points"); 
@@ -68,7 +69,7 @@ namespace np {
         }
     }
 
-    void deserialize_points( std::string path, std::vector<ofVec3f> & v ) {
+    inline void deserialize_points( std::string path, std::vector<ofVec3f> & v ) {
 
         ofXml xml;
 
@@ -96,3 +97,5 @@ namespace np {
     }
 
 }
+
+#endif //NPEXTRA_SERIALIZE_POINTS_H

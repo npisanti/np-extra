@@ -2,7 +2,7 @@
 #pragma once
 
 #include "components/Phasor.h"
-#include "components/Modulation.h"
+#include "components/Modulations.h"
 #include "components/PaletteTable.h"
 #include "components/Playlist.h"
 
