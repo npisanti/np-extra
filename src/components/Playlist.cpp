@@ -18,7 +18,7 @@ np::Playlist::Playlist(){
         #endif
     } 
 
-    speed.set("speed", 0.35f, 0.0f, 1.0f );    
+    speed.set("speed", 0.6f, 0.0f, 2.0f );    
     currentpath = "";
     nextpath = "";
     bChangeOnEnd = false;
@@ -73,8 +73,12 @@ void np::Playlist::change(){
 }
 
 void np::Playlist::draw( int x, int y, float scale ){
+    draw( x, y, buffers[b].getWidth()*scale, buffers[b].getHeight()*scale );
+}
+
+void np::Playlist::draw( int x, int y, int w, int h  ){
     
-    buffers[b].setSpeed( speed );    
+    buffers[b].setSpeed( speed*speed );    
     
     float position = buffers[b].getPosition();
     if( position < oldposition ){
@@ -86,10 +90,8 @@ void np::Playlist::draw( int x, int y, float scale ){
     oldposition = position;
 
     buffers[b].update();    
-    buffers[b].draw( x, y, buffers[b].getWidth()*scale, buffers[b].getHeight()*scale );
+    buffers[b].draw( x, y, w, h );
 }
-
-
 
 
 // ------------------ np::Playlist::RandomPaths ---------------------

@@ -25,6 +25,7 @@ public: // ------------------ public API ----------------------------
     void autonext( bool active = true );
     
     void draw( int x, int y, float scale );
+    void draw( int x, int y, int w, int h );
     
     int frame() const;
     

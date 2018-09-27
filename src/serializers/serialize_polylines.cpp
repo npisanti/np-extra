@@ -1,13 +1,9 @@
 
-#ifndef NPEXTRA_SERIALIZE_POLYLINES_H 
-#define NPEXTRA_SERIALIZE_POLYLINES_H 
-
-
-#include "ofMain.h"
+#include "serialize_polylines.h"
 
 namespace np {
     
-    inline void serialize_polylines( std::string path, const std::vector<ofPolyline> & v ) {
+    void serialize_polylines( std::string path, const std::vector<ofPolyline> & v ) {
 
         ofXml xml; 
         ofXml root = xml.appendChild("polys"); 
@@ -33,7 +29,7 @@ namespace np {
         }
     }
 
-    inline void deserialize_polylines( std::string path, std::vector<ofPolyline> & v ){
+    void deserialize_polylines( std::string path, std::vector<ofPolyline> & v ){
 
         ofXml xml;
 
@@ -67,5 +63,3 @@ namespace np {
     }
     
 }
-
-#endif //NPEXTRA_SERIALIZE_POLYLINES_H 

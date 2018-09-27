@@ -8,6 +8,7 @@
 np::Phasor::Phasor() {
     ph = 0.0f;
     bReached = false;
+    maxspeed = 6.0f; 
     
     speed.addListener( this, &Phasor::onSpeedParameter );
     
@@ -18,8 +19,7 @@ np::Phasor::Phasor() {
     parameters.add( retrig.set("retrig button", false));
 
     retrig.addListener( this, &Phasor::onRetrigParameter);
-    
-    maxspeed = 6.0f; 
+
 }
 
 void np::Phasor::autoupdate(){
@@ -103,5 +103,5 @@ void np::Phasor::onRetrigParameter( bool & value ) {
 	}
 }
 void np::Phasor::onSpeedParameter( float & value ) {
-	speedCalculated = (value*value)*maxspeed;
+	speedCalculated = (speed*speed)*maxspeed;
 }
