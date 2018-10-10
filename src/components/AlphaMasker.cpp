@@ -1,7 +1,7 @@
 
 #include "AlphaMasker.h"
 
-int np::AlphaMasker::constructed = 0;
+bool np::AlphaMasker::initialized = false;
 
 ofShader np::AlphaMasker::shader = ofShader();
 
@@ -61,30 +61,34 @@ const std::string np::AlphaMasker::fragment = ALPHAMASKSHADERSOURCE(
 
 ); //ALPHAMASKSHADERSOURCE end
 
-void np::AlphaMasker::setup(){
-    if(constructed==0){
+void np::AlphaMasker::init(){
+    if( ! initialized ){
         ofDisableArbTex();
         ofLogNotice()<<"[np::AlphaMasker] disabling ARB textures for shader\n";
         shader.setupShaderFromSource( GL_VERTEX_SHADER, vertex );
         shader.setupShaderFromSource( GL_FRAGMENT_SHADER, fragment );
         shader.bindDefaults();
         shader.linkProgram();
+        initialized = true;
     }
-    constructed++;
 }
 
 void np::AlphaMasker::draw( const ofTexture & source, const ofTexture & mask, int maskChannel ) {
-    shader.begin();
-    shader.setUniform2f( "u_resolution", source.getWidth(), source.getHeight()  );
-    shader.setUniform1i( "u_channel", maskChannel );
-    shader.setUniformTexture("u_tex0", source, source.getTextureData().textureID );
-    shader.setUniformTexture("u_tex1", mask, mask.getTextureData().textureID );
-    ofPushStyle();
-        ofFill();
-        ofSetColor(255);
-        ofDrawRectangle(0, 0, source.getWidth(), source.getHeight() );
-    ofPopStyle();
-    shader.end();
+    if( initialized ){
+        shader.begin();
+        shader.setUniform2f( "u_resolution", source.getWidth(), source.getHeight()  );
+        shader.setUniform1i( "u_channel", maskChannel );
+        shader.setUniformTexture("u_tex0", source, source.getTextureData().textureID );
+        shader.setUniformTexture("u_tex1", mask, mask.getTextureData().textureID );
+        ofPushStyle();
+            ofFill();
+            ofSetColor(255);
+            ofDrawRectangle(0, 0, source.getWidth(), source.getHeight() );
+        ofPopStyle();
+        shader.end();
+    }else{
+        ofLogError()<<"[np::AlphaMasker] not initialized! call setup() or np::masker::init() before use";
+    }
 }
 
 void np::AlphaMasker::draw( const ofTexture & source, const ofTexture & mask, float x, float y, float scale, int maskChannel ) {
@@ -93,4 +97,36 @@ void np::AlphaMasker::draw( const ofTexture & source, const ofTexture & mask, fl
         if( scale!=1.0f){ ofScale( scale, scale ); }
         draw( source, mask, maskChannel );
     ofPopMatrix();
+}
+
+
+void np::AlphaMasker::setup( int w, int h, int multisample, int mode ){
+    switch(mode){
+        case 0: fbo.allocate(w, h, GL_RGBA, multisample );
+        case 1: mask.allocate(w, h, GL_RGBA, multisample );
+        case 2: canvas.allocate(w, h, GL_RGBA, multisample );
+        break;
+    }
+    init();
+}
+
+void np::AlphaMasker::update(){
+    fbo.begin();
+        ofClear( 0, 0, 0, 0 );
+        draw( canvas.getTexture(), mask.getTexture() );
+    fbo.end();
+}
+
+void np::AlphaMasker::update( const ofTexture & source ){
+    fbo.begin();
+        ofClear( 0, 0, 0, 0 );
+        draw( source, mask.getTexture() );
+    fbo.end();
+}
+
+void np::AlphaMasker::update( const ofTexture & source, const ofTexture & mask ){
+    fbo.begin();
+        ofClear( 0, 0, 0, 0 );
+        draw( source, mask );
+    fbo.end();
 }
