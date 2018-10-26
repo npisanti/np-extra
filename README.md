@@ -11,4 +11,7 @@ Extra classes for openFrameworks. Includes:
 
 No other addons required for those classes, just oF. Those classes should work on all the oF platforms.
 
+DISCLAIMER:    
+I will treat everything in the `np` namespace as in constant alpha state, the code should be bug-free but the API will be subject to change, so if you want to use one of the classes just fork this repo or copy the .h and .cpp files you need.
+
 Nicola Pisanti, MIT License 2018.
