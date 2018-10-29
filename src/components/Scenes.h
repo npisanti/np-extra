@@ -20,6 +20,7 @@ public:
 	float cursor() const;
 
 	ofParameterGroup parameters;
+        ofParameter<int> min;
         ofParameter<int> exp;
         ofParameter<int> ms;
         ofParameter<int> sec;
@@ -47,6 +48,7 @@ public:
 	virtual void loop(){}; // override this if you don't use the fbos in the manager
 	
 	virtual void onStart(){};       // optional on start
+    virtual void onLoop(){};        // optional after the beginning and before loop
 	virtual void onShutdown(){}; 	// optional on shutdown
 	virtual void onEnd(){}; 	    // optional on end
 
@@ -68,6 +70,10 @@ public:
     }
 
     inline bool running(){ return (state!=Ended); }
+    inline bool isBeginning(){ return state==Beginning; }
+    inline bool isLooping(){ return state==Loop; }
+    inline bool isEnding(){ return state==Ending; }
+    inline bool isEnded() { return state==Ended; }
 
     void jump(){ if(state<3) state++; }
 

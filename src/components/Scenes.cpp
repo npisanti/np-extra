@@ -5,6 +5,7 @@
 
 np::TransitionCursor::TransitionCursor(){
 	parameters.setName("transition");
+    parameters.add( min.set("time (min)", 0, 0, 60) );
 	parameters.add( sec.set("time (sec)", 0, 0, 90) );
 	parameters.add( ms.set("time (ms)", 500, 0, 1000) );
 	parameters.add( exp.set("exponential", 1, 1, 4) ); // add more easing modes
@@ -27,7 +28,7 @@ bool np::TransitionCursor::update() {
 	if(bTransitioning ){
 		auto now = std::chrono::high_resolution_clock::now();
 		auto elapsed = now - start;
-		phase = std::chrono::duration_cast<chrono::milliseconds>(elapsed).count() / ( double ) ( sec*1000 + ms);
+		phase = std::chrono::duration_cast<chrono::milliseconds>(elapsed).count() / ( double ) ( ( min*60 + sec )*1000 + ms);
 		
 		if(phase>=1.0f){
 			phase = 1.0f;
@@ -93,6 +94,7 @@ void np::Scene::updateCursors(){
 	
 	if( state==Beginning && !beginningCursor.isTransitioning()){
         state = Loop;
+        onLoop();
     } 
 	
 	if( state==Ending && !endingCursor.isTransitioning()){

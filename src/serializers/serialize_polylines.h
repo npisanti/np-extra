@@ -11,6 +11,11 @@ namespace np {
 
     void deserialize_polylines( std::string path, std::vector<ofPolyline> & v );
     
+    
+    void serialize_polylines( std::string path, const std::vector<std::vector<ofPolyline>> & v );
+
+    void deserialize_polylines( std::string path, std::vector<std::vector<ofPolyline>> & v );
+    
 }
 
 #endif //NPEXTRA_SERIALIZE_POLYLINES_H 
