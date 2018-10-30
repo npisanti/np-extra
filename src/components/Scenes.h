@@ -11,11 +11,14 @@ class TransitionCursor {
 	
 public:
 	TransitionCursor();
-	
-	void begin();
-	bool update();
-	bool isTransitioning( );
-	void kill();
+
+	bool update();	
+
+	bool isTransitioning();
+
+	void begin();	
+    void kill();
+    void stop();
 	
 	float cursor() const;
 

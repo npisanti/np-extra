@@ -32,7 +32,6 @@ bool np::TransitionCursor::update() {
 		
 		if(phase>=1.0f){
 			phase = 1.0f;
-			
 		}			
 	}
 	return bTransitioning;
@@ -55,6 +54,11 @@ bool np::TransitionCursor::isTransitioning( ) {
 
 void np::TransitionCursor::kill() {
 	phase = 1.0f;
+	bTransitioning = false;
+}
+
+void np::TransitionCursor::stop(){
+	phase = 0.0f;
 	bTransitioning = false;
 }
 
@@ -112,6 +116,7 @@ void np::Scene::update(){
     updateCursors();
     if( state!=Ended ) loop();
 }
+
 
 
 // ---------------- np::SceneManager -----------------------------
