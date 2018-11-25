@@ -1,5 +1,5 @@
 
-#include "serialize_points.h"
+#include "points.h"
 
 namespace np {
 

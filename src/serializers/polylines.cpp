@@ -1,5 +1,5 @@
 
-#include "serialize_polylines.h"
+#include "polylines.h"
 
 void np::serialize_polylines( std::string path, const std::vector<ofPolyline> & v ) {
 

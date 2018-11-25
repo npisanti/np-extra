@@ -20,16 +20,9 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-
-        float   downsample;
-        ofFbo   dsFbo;
-        ofFbo	aaFbo;
         
         
-        int mode = 0;
-        
-        bool bAA;
-        
-        void fbographics();
-        string info;
+        ofPolyline silhouette;
+        ofPolyline freehand;
+        ofPolyline result;    
 };

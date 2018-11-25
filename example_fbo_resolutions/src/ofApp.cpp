@@ -6,8 +6,15 @@ void ofApp::setup(){
     
 	ofSetCircleResolution(50);
     
-    dsFbo.allocate( ofGetWidth()/4.0f, ofGetHeight()/4.0f );
+    downsample = 4.0f;
     
+    ofFbo::Settings settings;
+    settings.width  = ofGetWidth()/downsample;
+    settings.height = ofGetHeight()/downsample;
+    settings.minFilter = GL_NEAREST;
+    settings.maxFilter = GL_NEAREST;
+    dsFbo.allocate( settings );
+
     dsFbo.begin();
 		ofPushMatrix();
         ofClear( 0, 0, 0, 0 );
@@ -65,7 +72,7 @@ void ofApp::draw(){
 
     switch( mode ){
 		case 0:
-			dsFbo.draw( 0, 0 );
+			dsFbo.draw( 0, 0, dsFbo.getWidth()*downsample, dsFbo.getHeight()*downsample );
 		break;
 		
 		case 1:
@@ -91,11 +98,11 @@ void ofApp::keyPressed(int key){
    
     switch( key ){
         case OF_KEY_LEFT:
-            dsFbo.multiply -= 0.05f;
+            downsample -= 0.05f;
         break;
         
         case OF_KEY_RIGHT:
-            dsFbo.multiply += 0.05f;
+            downsample += 0.05f;
         break;
         
         case '0':
