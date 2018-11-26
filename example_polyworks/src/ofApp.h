@@ -25,4 +25,6 @@ class ofApp : public ofBaseApp{
         ofPolyline silhouette;
         ofPolyline freehand;
         ofPolyline result;    
+        bool freehandIsDone;
+        
 };
