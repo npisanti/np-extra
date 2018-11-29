@@ -13,6 +13,33 @@ void np::polyworks::push( const ofPolyline & src, ofPolyline & dest, const glm::
     }
 }
     
+void np::polyworks::suck( const ofPolyline & src, ofPolyline & dest, const glm::vec2 & origin, float amount ){
+    dest.resize( src.size() );
+    auto & srcVerts = src.getVertices();
+    auto & destVerts = dest.getVertices();
+    glm::vec3 origin3 = glm::vec3(origin.x, origin.y, 0.0f);
+
+    for( size_t v=0; v<destVerts.size(); v++) {
+        auto difference = srcVerts[v] - origin;
+        float distance = glm::distance( srcVerts[v], origin3 );
+        auto inside = glm::normalize(difference);
+        float amt = (amount<distance) ? amount : distance;
+        inside = inside * amt;
+        destVerts[v] = srcVerts[v] - inside;
+    }
+}    
+
+void np::polyworks::point( const ofPolyline & src, ofPolyline & dest, const glm::vec2 & origin, float pct ){
+    dest.resize( src.size() );
+    auto & srcVerts = src.getVertices();
+    auto & destVerts = dest.getVertices();
+
+    glm::vec3 origin3 = glm::vec3(origin.x, origin.y, 0.0f);
+    for( size_t v=0; v<destVerts.size(); v++) {
+        destVerts[v] = glm::mix( srcVerts[v], origin3, pct );
+    }
+}    
+
 void np::polyworks::stretch( const ofPolyline & src, ofPolyline & dest, float xAmount, float yAmount ){
     dest.resize( src.size() );
     auto & srcVerts = src.getVertices();
@@ -79,9 +106,10 @@ void np::polyworks::xalign( ofPolyline & dest, float x ){
 }
    
 void np::polyworks::radial( const ofPolyline & src, ofPolyline & dest, const glm::vec2 & origin, float angle, float arc, float off, float correction ){
+    dest.resize( src.size() );
     auto & srcVerts = src.getVertices();
     auto & destVerts = dest.getVertices();
-    dest.resize( src.size() );
+
     
     float minX = std::numeric_limits<float>::max();
     float maxX = std::numeric_limits<float>::lowest();
@@ -115,13 +143,97 @@ void np::polyworks::radial( const ofPolyline & src, ofPolyline & dest, const glm
 
 
 void np::polyworks::normals_expand( const ofPolyline & src, ofPolyline & dest, float amount, float sign ){
+    dest.resize( src.size() );
     auto & srcVerts = src.getVertices();
     auto & destVerts = dest.getVertices();
-    dest.resize( src.size() );
 
     float mult = amount * sign;
     for (size_t v=0; v<destVerts.size(); v++) {
         glm::vec2 normal = src.getNormalAtIndex(v) * mult;
         destVerts[v] = srcVerts[v] + normal;
+    }
+}
+
+void np::polyworks::jitter( const ofPolyline & src, ofPolyline & dest, float xAmount, float yAmount, float chance ){
+    dest = src;
+    auto & destVerts = dest.getVertices();
+    
+    for (size_t v=0; v<destVerts.size(); v++) {
+        if( ofRandomuf() < chance ){
+            destVerts[v].x += ofRandom( -xAmount, xAmount );
+            destVerts[v].y += ofRandom( -yAmount, yAmount );
+        }
+    }
+}
+
+void np::polyworks::xslicer( const ofPolyline & src, ofPolyline & dest, float amount, float slicewidth, float speed, float density ){
+    dest.clear();
+    
+    float step = 1.0f / density;
+    for( float pct=0.0f; pct<=1.0f; pct+=step ){
+        auto point = src.getPointAtPercent( pct );
+        int c = point.y / slicewidth;
+        point.x += ofSignedNoise( c*4.0f, ofGetElapsedTimef()*speed ) * amount;
+        dest.addVertex( point.x, point.y );
+    }
+}
+
+void np::polyworks::yslicer( const ofPolyline & src, ofPolyline & dest, float amount, float slicewidth, float speed, float density ){
+    dest.clear();
+    
+    float step = 1.0f / density;
+    for( float pct=0.0f; pct<=1.0f; pct+=step ){
+        auto point = src.getPointAtPercent( pct );
+        int c = point.x / slicewidth;
+        point.y += ofSignedNoise( c*4.0f, ofGetElapsedTimef()*speed ) * amount;
+        dest.addVertex( point.x, point.y );
+    }
+}
+
+
+void np::polyworks::noise( const ofPolyline & src, ofPolyline & dest, float amount, float speed, float offset, float density ){
+    dest.clear();
+    float step = 1.0f / density;
+    auto center = src.getCentroid2D();
+    
+    for( float pct=0.0f; pct<=1.0f; pct+=step ){
+        auto point = src.getPointAtPercent( pct );
+        auto difference = point - center;
+        auto outside = difference;
+        float noise = ofNoise(point.x*offset, point.y*offset, ofGetElapsedTimef()*speed) * amount;
+        auto output = point + (outside * noise);
+        dest.addVertex( output.x, output.y );
+    }
+}
+
+void np::polyworks::lerp( const ofPolyline & srcA, const ofPolyline &srcB, ofPolyline & dest, float a, float density ){
+    dest.clear();
+    float step = 1.0f / density;
+    for( float pct=0.0f; pct<=1.0f; pct+=step ){
+        auto point = glm::mix( srcA.getPointAtPercent(pct), srcB.getPointAtPercent(pct), a );
+        dest.addVertex( point.x, point.y );
+    }
+}
+
+void np::polyworks::radialwarp( const ofPolyline & srcA, const ofPolyline &srcB, ofPolyline & dest, const glm::vec2 & origin, float a, float density ){
+    dest.clear();
+    float step = 1.0f / density;
+    glm::vec3 origin3 = glm::vec3( origin.x, origin.y, 0.0f );
+    for( float pct=0.0f; pct<=1.0f; pct+=step ){
+        auto pA = srcA.getPointAtPercent(pct);
+        float thetaA = atan2( pA.y - origin3.y, pA.x - origin3.x );
+        float radA = glm::distance( pA, origin3 );
+        
+        auto pB = srcB.getPointAtPercent( pct );
+        float thetaB = atan2( pB.y - origin3.y, pB.x - origin3.x );
+        float radB = glm::distance( pB, origin3 );
+ 
+        float theta = thetaA * (1.0f-a) + thetaB * a;
+        float radius = radA * (1.0f-a) + radB * a;
+        
+        float x = origin3.x + cos( theta )*radius;
+        float y = origin3.y + sin( theta )*radius;
+        
+        dest.addVertex( x, y );
     }
 }

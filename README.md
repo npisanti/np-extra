@@ -8,6 +8,7 @@ Extra classes for openFrameworks. Includes:
 - `np::Playlist` class to load randomly videos on the fly.
 - `np::AlphaMasker` class to mask a source texture using a mask texture, can also be used with static methods as `np::masker::draw(...)`
 - Classes for managing Scenes and transitions between them.
+- functions for warping and transitioning between `ofPolyline`.
 
 No other addons required for those classes, just oF. Those classes should work on all the oF platforms.
 

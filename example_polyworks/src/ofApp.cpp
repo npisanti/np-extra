@@ -29,8 +29,8 @@ void ofApp::setup(){
 void ofApp::update(){
     float mx = ofGetMouseX() / float( ofGetWidth() );
     float my = ofGetMouseY() / float( ofGetHeight() );
-
     float base = np::polyworks::find_max_y(silhouette);
+    auto center = glm::vec2(ofGetWidth()*0.5f, ofGetHeight()*0.5f);
     
     //np::polyworks::inflate( silhouette, result, ofGetMouseX() );
     //np::polyworks::smooth( result, my * 10.0f );
@@ -44,9 +44,18 @@ void ofApp::update(){
     //np::polyworks::normals_expand( silhouette, result, mx*50.0f );
     //np::polyworks::smooth( result, 10 );
 
-    glm::vec2 mouse( ofGetMouseX(), ofGetMouseY() );
-    np::polyworks::push( silhouette, result, mouse, 150 );
+    //glm::vec2 mouse( ofGetMouseX(), ofGetMouseY() );
+    //np::polyworks::push( silhouette, result, mouse, 150 );
+    
+    //np::polyworks::jitter( silhouette, result, mx*100.0f, my*50.0f, 0.3f );
 
+    //np::polyworks::point( silhouette, result, center, my );
+
+    //np::polyworks::xslicer( silhouette, result, mx*200, 40.0f );
+    
+    np::polyworks::noise( freehand, result, mx*4.0f );
+    
+    //np::polyworks::radialwarp( silhouette, freehand, result, glm::vec2(ofGetWidth()*0.5f, ofGetHeight()), mx );
 }
 
 //--------------------------------------------------------------
