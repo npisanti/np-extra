@@ -41,9 +41,6 @@ void ofApp::update(){
     //np::polyworks::basealign(  result, base );
     //np::polyworks::smooth( result );
     
-    //np::polyworks::normals_expand( silhouette, result, mx*50.0f );
-    //np::polyworks::smooth( result, 10 );
-
     //glm::vec2 mouse( ofGetMouseX(), ofGetMouseY() );
     //np::polyworks::push( silhouette, result, mouse, 150 );
     
@@ -53,22 +50,30 @@ void ofApp::update(){
 
     //np::polyworks::xslicer( silhouette, result, mx*200, 40.0f );
     
-    np::polyworks::noise( freehand, result, mx*4.0f );
+    //np::polyworks::noise( freehand, result, mx*4.0f );
     
     //np::polyworks::radialwarp( silhouette, freehand, result, glm::vec2(ofGetWidth()*0.5f, ofGetHeight()), mx );
+    
+    //np::polyworks::subpoly( silhouette, result, my, my+0.25f );
+    
+    //np::polyworks::xmirror( silhouette, result, ofGetMouseX() );
+
+    np::polyworks::normals_expand( silhouette, result, mx*50.0f );
+    np::polyworks::smooth( result, my*10 );
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofNoFill();
 
-    auto drawpoly = []( ofPolyline & poly ) noexcept { 
+    auto drawpoly = []( ofPolyline & poly, bool close=true ) noexcept { 
         auto & vertices = poly.getVertices();
         ofBeginShape();
         for( size_t v=0; v<vertices.size(); ++v ){
             ofVertex( vertices[v].x, vertices[v].y );
         }
-        ofEndShape(true);
+        ofEndShape(close);
     };
     ofSetColor( 120, 0, 0 );
     drawpoly( silhouette );
@@ -84,20 +89,7 @@ void ofApp::exit(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-   
-    switch( key ){
-        case '1': 
-        
-        break;
-        
-        case '2': 
-        
-        break;
-        
-        case '3': 
-        
-        break;
-        
+    switch( key ){    
         case ' ':
             freehand.addVertex( freehand.getVertices()[0] );
             freehandIsDone = true;

@@ -141,7 +141,6 @@ void np::polyworks::radial( const ofPolyline & src, ofPolyline & dest, const glm
     }
 }
 
-
 void np::polyworks::normals_expand( const ofPolyline & src, ofPolyline & dest, float amount, float sign ){
     dest.resize( src.size() );
     auto & srcVerts = src.getVertices();
@@ -236,4 +235,88 @@ void np::polyworks::radialwarp( const ofPolyline & srcA, const ofPolyline &srcB,
         
         dest.addVertex( x, y );
     }
+}
+
+
+void np::polyworks::subpoly( const ofPolyline & src, ofPolyline & dest, float start, float stop ){
+    dest.clear();
+    bool wrap = false;
+    
+    float fMinIndex = start * float( src.size()-1 );
+    float fMaxIndex = stop * float( src.size()-1 );
+    
+    if( stop > 1.0f ){
+        wrap = true;
+        fMaxIndex = fmod( fMaxIndex, float( src.size()-1 ));
+    }
+    int min = ceil( fMinIndex );
+    int max = fMaxIndex;
+    
+    if( float(min) != fMinIndex ){
+        dest.addVertex( src.getPointAtIndexInterpolated(fMinIndex) );
+    }
+    
+    if( wrap ){
+        auto & srcVerts = src.getVertices();
+        for( int i=min; i<(int)srcVerts.size(); ++i ){
+            dest.addVertex( srcVerts[i].x, srcVerts[i].y );
+        }
+        for( int i=0; i<=max; ++i ){
+            dest.addVertex( srcVerts[i].x, srcVerts[i].y );
+        }
+    }else{
+        auto & srcVerts = src.getVertices();
+        for( int i=min; i<=max; ++i ){
+            dest.addVertex( srcVerts[i].x, srcVerts[i].y );
+        }        
+    }
+
+    if( float(max) != fMaxIndex ){
+        dest.addVertex( src.getPointAtIndexInterpolated(fMaxIndex) );
+    }
+}
+
+
+void np::polyworks::xmirror( const ofPolyline & src, ofPolyline & dest, float mirrorpoint ){
+    dest.resize( src.size() );
+    auto & srcVerts = src.getVertices();
+    auto & destVerts = dest.getVertices();
+
+    for( size_t v=0; v<destVerts.size(); v++ ){
+        destVerts[v].x = mirrorpoint + mirrorpoint - srcVerts[v].x;
+        destVerts[v].y = srcVerts[v].y;
+    }
+}
+
+void np::polyworks::ymirror( const ofPolyline & src, ofPolyline & dest, float mirrorpoint ){
+    dest.resize( src.size() );
+    auto & srcVerts = src.getVertices();
+    auto & destVerts = dest.getVertices();
+
+    for( size_t v=0; v<destVerts.size(); v++ ){
+        destVerts[v].x = srcVerts[v].x;
+        destVerts[v].y = mirrorpoint + mirrorpoint - srcVerts[v].y;
+    }
+}
+
+
+void np::polyworks::inside( const ofPolyline & srcA, const ofPolyline & srcB, std::vector<ofPolyline> & results, float density  ){
+    //dest.clear();
+    float step = 1.0f / density;
+    float outside = true;
+    
+    for( float pct=0.0f; pct<=1.0f; pct+=step ){
+        auto pA = srcA.getPointAtPercent(pct);
+        if( srcB.inside( pA.x, pA.y ) ) {
+            if( outside ){
+                results.emplace_back();
+                results.back().clear();
+                outside = false;
+            }
+            results.back().addVertex( pA.x, pA.y );
+        }else{
+            outside = true;
+        }
+    }
+    
 }
