@@ -4,6 +4,8 @@
 #include "serializers/polylines.h"
 #include "components/polyworks.h"
 
+#define ROUTINEMAX 14
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     
@@ -14,7 +16,7 @@ void ofApp::setup(){
     silhouette = import[0][0];
     silhouette.close();
     
-    int x = 800;
+    int x = 1000;
     int y = 300;
     int side = 250;
     freehand.addVertex( x, y );
@@ -23,6 +25,10 @@ void ofApp::setup(){
     freehand.addVertex( x, y+side );
     freehand.addVertex( x, y );
     freehandIsDone = true;   
+    
+    routine = 0;
+    label = "";
+    target = 0;
 }
 
 //--------------------------------------------------------------
@@ -31,36 +37,110 @@ void ofApp::update(){
     float my = ofGetMouseY() / float( ofGetHeight() );
     float base = np::polyworks::find_max_y(silhouette);
     auto center = glm::vec2(ofGetWidth()*0.5f, ofGetHeight()*0.5f);
+    glm::vec2 mouse( ofGetMouseX(), ofGetMouseY() );
     
-    //np::polyworks::inflate( silhouette, result, ofGetMouseX() );
-    //np::polyworks::smooth( result, my * 10.0f );
-    
-    //np::polyworks::radial( silhouette, result, glm::vec2( ofGetWidth()*0.5f, ofGetHeight()*0.5f), mx*TWO_PI );
+    ofPolyline * input = nullptr;
+    switch( target ){
+        default:
+            input = &silhouette;
+        break;
 
-    //np::polyworks::stretch( silhouette, result, mx*4.0f, 1.0f );
-    //np::polyworks::basealign(  result, base );
-    //np::polyworks::smooth( result );
+        case 1: 
+            input = &freehand;
+        break;
+    }
     
-    //glm::vec2 mouse( ofGetMouseX(), ofGetMouseY() );
-    //np::polyworks::push( silhouette, result, mouse, 150 );
-    
-    //np::polyworks::jitter( silhouette, result, mx*100.0f, my*50.0f, 0.3f );
+    switch( routine ){
+        case 0 :
+            label = "void np::polyworks::inflate( const ofPolyline & src, ofPolyline & dest, float amount )";
+            np::polyworks::inflate( *input, result, ofGetMouseX()*0.5f );
+        break;
 
-    //np::polyworks::point( silhouette, result, center, my );
+        case 1 :
+            label = "void np::polyworks::push( const ofPolyline & src, ofPolyline & dest, const glm::vec2 & origin, float amount )";
+            np::polyworks::push( *input, result, mouse, 150 );
+        break;
+        
+        case 2 :
+            label = "void np::polyworks::collapse( const ofPolyline & src, ofPolyline & dest, float amount )";
+            np::polyworks::collapse( *input, result, ofGetMouseX()*0.5f );
+        break;
 
-    //np::polyworks::xslicer( silhouette, result, mx*200, 40.0f );
-    
-    //np::polyworks::noise( freehand, result, mx*4.0f );
-    
-    //np::polyworks::radialwarp( silhouette, freehand, result, glm::vec2(ofGetWidth()*0.5f, ofGetHeight()), mx );
-    
-    //np::polyworks::subpoly( silhouette, result, my, my+0.25f );
-    
-    //np::polyworks::xmirror( silhouette, result, ofGetMouseX() );
+        case 3 :
+            label = "void np::polyworks::suck( const ofPolyline & src, ofPolyline & dest, const glm::vec2 & origin, float amount )";
+            np::polyworks::suck( *input, result, mouse, 150 );
+        break;
 
-    np::polyworks::normals_expand( silhouette, result, mx*50.0f );
-    np::polyworks::smooth( result, my*10 );
+        case 4 :
+            label = "void np::polyworks::radial( const ofPolyline & src, ofPolyline & dest, const glm::vec2 & origin, float angle, float arc=PI*1.5f, float off = 0.0f, float correction = 0.3f )";
+            np::polyworks::radial( *input, result, glm::vec2( ofGetWidth()*0.5f, ofGetHeight()*0.5f), mx*TWO_PI );
+        break;
+        
+        case 5 :
+            label = "void np::polyworks::stretch( const ofPolyline & src, ofPolyline & dest, float xAmount, float yAmount )\n";
+            label += "void np::polyworks::basealign( ofPolyline & dest, float yBase )";
+            np::polyworks::stretch( *input, result, mx*4.0f, 1.0f );
+            np::polyworks::basealign(  result, base );
+        break;
+        
+        case 6 :
+            label = "void np::polyworks::jitter( const ofPolyline & src, ofPolyline & dest, float xAmount, float yAmount=0.0f, float chance=0.03f )";
+            np::polyworks::jitter( *input, result, mx*100.0f, my*50.0f, 0.3f );
+        break;
+        
+        case 7:
+            label = "void np::polyworks::point( const ofPolyline & src, ofPolyline & dest, const glm::vec2 & origin, float pct )";
+            np::polyworks::point( *input, result, center, my );
+        break;
+        
+        case 8:
+            label = "void np::polyworks::xslicer( const ofPolyline & src, ofPolyline & dest, float amount, float slicewidth, float speed = 0.01f, float density=250.0f )";
+            np::polyworks::xslicer( *input, result, mx*200, 40.0f );
+        break;
 
+        case 9:
+            label ="void np::polyworks::noise( const ofPolyline & src, ofPolyline & dest, float amount, float speed=0.2f, float offset=0.01f, float density=120.0f )";
+            np::polyworks::noise( *input, result, mx*4.0f );
+        break;
+
+        case 10:
+            label = "void np::polyworks::normals_expand( const ofPolyline & src, ofPolyline & dest, float amount, float sign = -1.0f )\n";
+            label += "void smooth( ofPolyline & dest, float amount=2.0f )";
+            np::polyworks::normals_expand( *input, result, mx*50.0f );
+            np::polyworks::smooth( result, my*10 );
+        break;    
+        
+        case 11:
+            label ="void np::polyworks::subpoly( const ofPolyline & src, ofPolyline & dest, float start, float stop )";
+            np::polyworks::subpoly( *input, result, my, my+0.25f );
+        break;
+    
+        case 12:
+            label = "void np::polyworks::xmirror( const ofPolyline & src, ofPolyline & dest, float mirrorpoint )";
+            np::polyworks::xmirror( *input, result, ofGetMouseX() );
+        break;
+
+        case 13:
+            label = "void np::polyworks::lerp( const ofPolyline & srcA, const ofPolyline &srcB, ofPolyline & dest, float a, float density=120.0f )";
+            np::polyworks::lerp( silhouette, freehand, result, mx );
+        break;    
+
+        case 14:
+            label = "void np::polyworks::radialwarp( const ofPolyline & srcA, const ofPolyline &srcB, ofPolyline & dest, const glm::vec2 & origin, float a, float density=120.0f )";
+            np::polyworks::radialwarp( silhouette, freehand, result, glm::vec2(ofGetWidth()*0.5f, ofGetHeight()), mx );
+        break;
+
+        default: break;
+    }
+
+    label += "\n\npress RETURN for next routine and BACKSPACE for previous";
+    label += "\nmove the mouse for some control ";
+    label += "\nclick to draw a shape, SPACEBAR to start a new shape";
+    label += "\npress TAB to change target. target = ";
+    switch( target ){
+        case 0: label +="silhouette"; break;
+        case 1: label += "freehand shape"; break;
+    }
 }
 
 //--------------------------------------------------------------
@@ -80,6 +160,8 @@ void ofApp::draw(){
     drawpoly( freehand );
     ofSetColor( 255 );
     drawpoly( result );
+    
+    ofDrawBitmapString( label, 20, 20 );
 }
 
 //--------------------------------------------------------------
@@ -93,6 +175,19 @@ void ofApp::keyPressed(int key){
         case ' ':
             freehand.addVertex( freehand.getVertices()[0] );
             freehandIsDone = true;
+        break;
+        case OF_KEY_RETURN : 
+            routine++;
+            if( routine > ROUTINEMAX ){ routine = 0; }
+        break;
+        
+        case OF_KEY_BACKSPACE: 
+            routine--;
+            if(routine<0){ routine = ROUTINEMAX; }
+        break;
+        
+        case OF_KEY_TAB: 
+            target = target ? 0 : 1;
         break;
     }
 }

@@ -27,4 +27,8 @@ class ofApp : public ofBaseApp{
         ofPolyline result;    
         bool freehandIsDone;
         
+        int routine;
+        std::string label;
+        int target;
+        
 };
