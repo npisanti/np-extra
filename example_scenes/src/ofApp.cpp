@@ -13,13 +13,10 @@ namespace resources {
 void ofApp::setup(){
 
     // init the resources
-
     resources::colorA = ofColor(255, 0, 0);
     resources::colorB = ofColor( ofRandom(255), ofRandom(255), ofRandom(255) );
-
     resources::width = ofGetWidth();
     resources::height = ofGetHeight();
-
 
     // then init the scenes
     sceneA.setup();
@@ -31,7 +28,7 @@ void ofApp::setup(){
     manager.add( &sceneA );
     manager.add( &sceneB );
 
-    ofBackground( resources::colorB * 0.25 );
+    ofBackground( resources::colorB * 0.1 );
 }
 
 //--------------------------------------------------------------
@@ -51,47 +48,21 @@ void ofApp::exit(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if ( key == ' '){
-        manager.next();
+    switch( key ){
+        case OF_KEY_RETURN: manager.next(); break;
+        case OF_KEY_BACKSPACE: manager.prev(); break;
     }
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y){
-
-}
+void ofApp::keyReleased(int key){}
+void ofApp::mousePressed(int x, int y, int button){}
+void ofApp::mouseDragged(int x, int y, int button){}
+void ofApp::mouseReleased(int x, int y, int button){}
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-
-}
-
+void ofApp::mouseMoved(int x, int y){}
+void ofApp::windowResized(int w, int h){}
+void ofApp::gotMessage(ofMessage msg){}
+void ofApp::dragEvent(ofDragInfo dragInfo){}
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){
-
-}

@@ -6,7 +6,7 @@
 np::TransitionCursor::TransitionCursor(){
 	parameters.setName("transition");
     parameters.add( min.set("time (min)", 0, 0, 60) );
-	parameters.add( sec.set("time (sec)", 0, 0, 90) );
+	parameters.add( sec.set("time (sec)", 0, 0, 60) );
 	parameters.add( ms.set("time (ms)", 500, 0, 1000) );
 	parameters.add( exp.set("exponential", 1, 1, 4) ); // add more easing modes
 	bTransitioning = false;
@@ -14,9 +14,13 @@ np::TransitionCursor::TransitionCursor(){
 }
 
 void np::TransitionCursor::begin() {
-	bTransitioning = true;
-	phase = 0.0f;
-	start = std::chrono::high_resolution_clock::now();
+    if( ! (min==0 && sec==0 && ms==0) ){
+        bTransitioning = true;
+        phase = 0.0f;
+        start = std::chrono::high_resolution_clock::now();        
+    }else{
+        phase = 1.0f;
+    }
 }
 
 bool np::TransitionCursor::update() {
@@ -72,12 +76,11 @@ ofParameterGroup & np::TransitionCursor::label( std::string name ){
 // ---------------- np::Scene ---------------------------------------
 
 np::Scene::Scene(){
-    parameters.setName( "scene parameters");
-    parameters.add( alpha.set("alpha", 255, 0, 255) );
-    parameters.add( beginningCursor.label("beginning") );
-    parameters.add( endingCursor.label("ending") );
+    transitions.setName( "transitions");
+    transitions.add( beginningCursor.label("beginning") );
+    transitions.add( endingCursor.label("ending") );
+    alpha.set("alpha", 255, 0, 255);
 }
-
 
 void np::Scene::start(){
 	beginningCursor.begin();
@@ -124,6 +127,10 @@ void np::Scene::update(){
 np::SceneManager::SceneManager(){
     width = 0;
     height = 0;
+    modes.reserve(10);
+    modes.clear();
+    modes.push_back( nullptr );
+    mode = 0;
 }
 
 void np::SceneManager::setup( int w, int h, bool useFbo ){
@@ -145,6 +152,11 @@ void np::SceneManager::setup( int w, int h, bool useFbo ){
     current = 0;
     old = 0;
     currentFbo = false;
+    
+    
+    int prio = 0; // OF_EVENT_PRIORITY_BEFORE_APP
+    ofAddListener( ofEvents().keyPressed, this, &np::SceneManager::onKey, prio );
+    
 }
 
 void np::SceneManager::add( Scene* scenePointer ){
@@ -157,7 +169,7 @@ void np::SceneManager::set( int i ){
         i += scenes.size(); 
     }
     
-    while( i>= int(scenes.size()) ){ 
+    while( i >= int(scenes.size()) ){ 
         i -= scenes.size(); 
     }
         
@@ -181,12 +193,48 @@ void np::SceneManager::set( int i ){
     }        
 }
 
+void np::SceneManager::next(){
+    set( current+1 );
+}
+    
+void np::SceneManager::prev(){
+    set( current-1 );
+}
+
+void np::SceneManager::addMode( Mode* modePointer ){
+    modes.push_back( modePointer );
+}
+
+void np::SceneManager::setMode( int i ){
+    if( i<0 ){
+        i=0; 
+        ofLogError()<< "[np::SceneManager] mode index less than 0, setting to default (0).";
+    }else if( i>=int(modes.size()) ){
+        ofLogError()<< "[np::SceneManager] mode index greater than max, ignoring.";
+    }else{
+        mode = i;
+    }
+}
+
+void np::SceneManager::nextMode(){
+    mode++;
+    if( mode>=int(modes.size()) ){
+        mode = 0;
+    }
+}
+
+void np::SceneManager::prevMode(){
+    mode--;
+    if( mode<0 ){
+        mode = modes.size()-1;
+    }
+}
+
 void np::SceneManager::update(){
     if( bUseFbo ){
         if( scenes[old] != nullptr ){
             scenes[old]->update( fbos[!currentFbo] );
         }        
-
         if( scenes[current] != nullptr ){
             scenes[current]->update( fbos[currentFbo] );
         }            
@@ -194,7 +242,6 @@ void np::SceneManager::update(){
         if( scenes[old] != nullptr ){
             scenes[old]->update();
         }        
-
         if( scenes[current] != nullptr ){
             scenes[current]->update();
         }          
@@ -255,22 +302,85 @@ void np::SceneManager::draw( int x, int y, float scale, bool frame ){
     }
 }
 
-void np::SceneManager::next(){
-    set( current+1 );
+void np::SceneManager::draw( int x, int y ){
+    if( bUseFbo ){
+        if( scenes[old] != nullptr && scenes[old]->running() ){
+            ofSetColor( 255, scenes[old]->alpha );
+            fbos[!currentFbo].draw( x, y );
+        }
+        if( scenes[current] != nullptr && scenes[current]->running()  ){
+            ofSetColor( 255, scenes[current]->alpha );
+            fbos[currentFbo].draw( x, y );
+        }
+    }
 }
-    
-void np::SceneManager::prev(){
-    set( current-1 );
-}
+
 
 void np::SceneManager::drawInterface(){
-    if( scenes[current] != nullptr ){
-        scenes[current]->drawInterface();
-    }  
+    if( modes[mode] == nullptr ){
+        float x = 0.0f; 
+        float y = 0.0f;
+        float width = 0.0f;
+        float height = 0.0f;
+        
+        if( bUseFbo ){
+            width = fbos[0].getWidth();
+            height = fbos[0].getHeight();    
+        }
+        if( scenes[current] != nullptr ){
+            scenes[current]->drawInterface( x, y, width, height );
+        }
+        if( bUseFbo ){
+            draw( x, y, width, height, true );
+        }
+    }else{
+        modes[mode]->draw();
+    }
 }
 
-void np::SceneManager::keyPressed( int key ){
-    if( scenes[current] != nullptr ){
-        scenes[current]->keyPressed( key );
-    }  
+void np::SceneManager::onKey( ofKeyEventArgs & args ){
+    switch ( args.type ){
+        case ofKeyEventArgs::Pressed : 
+            if( modes[mode] == nullptr ){
+                if( scenes[current] != nullptr ){
+                    scenes[current]->keyPressed( args.key );
+                }          
+            }else{
+                modes[mode]->keyPressed( args.key );
+            }
+        
+        
+        break;
+        
+        case ofKeyEventArgs::Released : 
+            if( modes[mode] != nullptr ){
+                modes[mode]->keyReleased( args.key );
+            }
+        break;
+        
+        default: break;
+    }
+}
+
+void np::SceneManager::onMouse( ofMouseEventArgs & args ){
+    switch ( args.type ){
+        case ofMouseEventArgs::Pressed : 
+            if( modes[mode]!= nullptr ){
+                modes[mode]->mousePressed( args.x, args.y, args.button );
+            }
+        break;      
+          
+        case ofMouseEventArgs::Dragged : 
+            if( modes[mode]!= nullptr ){
+                modes[mode]->mouseDragged( args.x, args.y, args.button );
+            }
+        break;      
+        
+        case ofMouseEventArgs::Released : 
+            if( modes[mode]!= nullptr ){
+                modes[mode]->mouseReleased( args.x, args.y, args.button );
+            }
+        break;      
+        default: break;
+    }
 }

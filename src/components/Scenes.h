@@ -56,7 +56,7 @@ public:
 	virtual void onEnd(){}; 	    // optional on end
 
     virtual void keyPressed( int key ){};
-    virtual void drawInterface(){};
+    virtual void drawInterface( float & x, float & y, float & width, float & height ){};
     
     // to be called inside the scene --------------------------------
     
@@ -77,6 +77,9 @@ public:
     inline bool isLooping(){ return state==Loop; }
     inline bool isEnding(){ return state==Ending; }
     inline bool isEnded() { return state==Ended; }
+    
+    // to avoid multiple scenes handling the same resources 
+    inline bool resourcesAvailable(){ return state<2; } 
 
     void jump(){ if(state<3) state++; }
 
@@ -87,7 +90,7 @@ public:
 	void start();
 	void shutdown();
 	
-    ofParameterGroup parameters;
+    ofParameterGroup transitions;
         ofParameter<int> alpha;
     
 protected:	
@@ -107,6 +110,24 @@ protected:
 };
 
 
+// ---------------- np::Mode ----------------------------------------
+class Mode {
+
+public:
+    Mode();
+	
+    // methods to write: --------------------------------------------
+	virtual void draw(){}; 
+	
+    virtual void keyPressed( int key ){};
+    virtual void keyReleased( int key ){};
+    virtual void mousePressed(int x, int y, int button){}
+    virtual void mouseDragged(int x, int y, int button){}
+    virtual void mouseReleased(int x, int y, int button){}
+
+};
+
+
 // ------------------ np::SceneManager ------------------------------
 class SceneManager {
     
@@ -119,13 +140,21 @@ public:
     void next();
     void prev();
     
-    void drawInterface();
-    void keyPressed( int key );
-    
+    void addMode( Mode* modePointer );
+    void setMode( int i );
+    void nextMode();
+    void prevMode();
+
     void update();
     void draw();
     void draw( int x, int y, int w, int h, bool frame=false );
     void draw( int x, int y, float scale, bool frame=false );
+    void draw( int x, int y );
+    
+    void drawInterface();
+
+    void onKey( ofKeyEventArgs & args );
+    void onMouse( ofMouseEventArgs & args );    
     
     int getWidth() const { return width; };
     int getHeight() const { return height; };
@@ -134,6 +163,7 @@ private:
 
     bool bUseFbo;
     std::vector<Scene*> scenes;
+    std::vector<Mode*> modes;
    
     int current;
     int old;
@@ -143,6 +173,7 @@ private:
     int width;
     int height;
     
+    int mode;
 };    
 
 }
