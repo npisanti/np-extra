@@ -66,6 +66,12 @@ void np::TransitionCursor::stop(){
 	bTransitioning = false;
 }
 
+void np::TransitionCursor::zeroTime(){
+    ms = 0;
+    sec = 0;
+    min = 0;    
+}
+
 ofParameterGroup & np::TransitionCursor::label( std::string name ){
     parameters.setName( name );
     return parameters;
@@ -155,8 +161,11 @@ void np::SceneManager::setup( int w, int h, bool useFbo ){
     
     
     int prio = 0; // OF_EVENT_PRIORITY_BEFORE_APP
-    ofAddListener( ofEvents().keyPressed, this, &np::SceneManager::onKey, prio );
-    
+    ofAddListener( ofEvents().keyPressed, this, &np::SceneManager::keyPressed, prio );
+    ofAddListener( ofEvents().keyReleased, this, &np::SceneManager::keyReleased, prio );
+    ofAddListener( ofEvents().mousePressed, this, &np::SceneManager::mousePressed, prio );
+    ofAddListener( ofEvents().mouseReleased, this, &np::SceneManager::mouseReleased, prio );
+    ofAddListener( ofEvents().mouseDragged, this, &np::SceneManager::mouseDragged, prio );
 }
 
 void np::SceneManager::add( Scene* scenePointer ){
@@ -179,11 +188,11 @@ void np::SceneManager::set( int i ){
         fbos[currentFbo].begin();
             ofClear( 0, 0, 0, 0 );
         fbos[currentFbo].end();
-        
-        old = current;
-        current = i;        
     }
-
+        
+    old = current;
+    current = i;       
+    
     if( scenes[old] != nullptr ){
         scenes[old]->shutdown();
     }        
@@ -338,70 +347,52 @@ void np::SceneManager::drawInterface(){
     }
 }
 
-void np::SceneManager::onKey( ofKeyEventArgs & args ){
+void np::SceneManager::keyPressed( ofKeyEventArgs & args ){
     if( modes[mode] == nullptr ){
         if( scenes[current] != nullptr ){
-            switch ( args.type ){
-                case ofKeyEventArgs::Pressed : 
-                    scenes[current]->keyPressed( args.key );
-                break;
-                        
-                case ofKeyEventArgs::Released : 
-                    scenes[current]->keyReleased( args.key );
-                break;
-                
-                default: break;
-            }
+            scenes[current]->keyPressed( args.key );
         }      
     }else{
-        switch ( args.type ){
-            case ofKeyEventArgs::Pressed : 
-                modes[mode]->keyPressed( args.key );
-            break;
-            
-            case ofKeyEventArgs::Released : 
-                modes[mode]->keyReleased( args.key ); 
-            break;
-            
-            default: break;
-        }    
+        modes[mode]->keyReleased( args.key ); 
     }
 }
 
-void np::SceneManager::onMouse( ofMouseEventArgs & args ){
+void np::SceneManager::keyReleased( ofKeyEventArgs & args ){
     if( modes[mode] == nullptr ){
         if( scenes[current] != nullptr ){
-            switch ( args.type ){
-                case ofMouseEventArgs::Pressed : 
-                    scenes[current]->mousePressed( args.x, args.y, args.button );
-                break;      
-                
-                case ofMouseEventArgs::Dragged : 
-                    scenes[current]->mouseDragged( args.x, args.y, args.button );
-                break;      
-                
-                case ofMouseEventArgs::Released : 
-                    scenes[current]->mouseReleased( args.x, args.y, args.button );
-                break;      
-                
-                default: break;
-            }             
+            scenes[current]->keyReleased( args.key );
+        }      
+    }else{
+        modes[mode]->keyReleased( args.key ); 
+    }
+}
+
+void np::SceneManager::mousePressed( ofMouseEventArgs & args ){
+    if( modes[mode] == nullptr ){
+        if( scenes[current] != nullptr ){
+            scenes[current]->mousePressed( args.x, args.y, args.button );
         }
     }else{
-        switch ( args.type ){
-            case ofMouseEventArgs::Pressed : 
-                modes[mode]->mousePressed( args.x, args.y, args.button );
-            break;      
-            
-            case ofMouseEventArgs::Dragged : 
-                modes[mode]->mouseDragged( args.x, args.y, args.button );
-            break;      
-            
-            case ofMouseEventArgs::Released : 
-                modes[mode]->mouseReleased( args.x, args.y, args.button );
-            break;      
-            
-            default: break;
-        }        
+        modes[mode]->mousePressed( args.x, args.y, args.button );      
+    }
+}
+
+void np::SceneManager::mouseDragged( ofMouseEventArgs & args ){
+    if( modes[mode] == nullptr ){
+        if( scenes[current] != nullptr ){
+            scenes[current]->mouseDragged( args.x, args.y, args.button );        
+        }
+    }else{
+        modes[mode]->mouseDragged( args.x, args.y, args.button );    
+    }
+}
+
+void np::SceneManager::mouseReleased( ofMouseEventArgs & args ){
+    if( modes[mode] == nullptr ){
+        if( scenes[current] != nullptr ){
+            scenes[current]->mouseReleased( args.x, args.y, args.button );       
+        }
+    }else{
+        modes[mode]->mouseReleased( args.x, args.y, args.button );  
     }
 }

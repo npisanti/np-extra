@@ -30,6 +30,8 @@ public:
         
     ofParameterGroup & label( std::string name );
 	
+    void zeroTime();
+    
 private:
 	float phase;
 	float add;
@@ -157,8 +159,12 @@ public:
     
     void drawInterface();
 
-    void onKey( ofKeyEventArgs & args );
-    void onMouse( ofMouseEventArgs & args );    
+    void keyPressed( ofKeyEventArgs & args );
+    void keyReleased( ofKeyEventArgs & args );
+    void mousePressed( ofMouseEventArgs & args );    
+    void mouseReleased( ofMouseEventArgs & args );    
+    void mouseDragged( ofMouseEventArgs & args );    
+    
     
     int getWidth() const { return width; };
     int getHeight() const { return height; };
