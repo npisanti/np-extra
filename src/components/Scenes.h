@@ -56,6 +56,11 @@ public:
 	virtual void onEnd(){}; 	    // optional on end
 
     virtual void keyPressed( int key ){};
+    virtual void keyReleased( int key ){};
+    virtual void mousePressed(int x, int y, int button){}
+    virtual void mouseDragged(int x, int y, int button){}
+    virtual void mouseReleased(int x, int y, int button){}
+    
     virtual void drawInterface( float & x, float & y, float & width, float & height ){};
     
     // to be called inside the scene --------------------------------
@@ -114,8 +119,7 @@ protected:
 class Mode {
 
 public:
-    Mode();
-	
+
     // methods to write: --------------------------------------------
 	virtual void draw(){}; 
 	
