@@ -38,6 +38,8 @@ public: // --------------- PUBLIC API ------------------------------------------
     void draw( float x=0.0f, float y=0.0f ){ fbo.draw(x, y); }
     void draw( float x, float y, float w, float h ){ fbo.draw(x, y, w, h); }
 
+    int getWidth() const { return fbo.getWidth(); }
+    int getHeight() const { return fbo.getHeight(); }
 
     // static functions, use np::masker wrapper for this, see down -------------
     static void init();
