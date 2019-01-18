@@ -102,9 +102,9 @@ void np::AlphaMasker::draw( const ofTexture & source, const ofTexture & mask, fl
 
 void np::AlphaMasker::setup( int w, int h, int multisample, int mode ){
     switch(mode){
-        case 0: fbo.allocate(w, h, GL_RGBA, multisample );
-        case 1: mask.allocate(w, h, GL_RGBA, multisample );
         case 2: canvas.allocate(w, h, GL_RGBA, multisample );
+        case 1: mask.allocate(w, h, GL_RGBA, multisample );
+        case 0: fbo.allocate(w, h, GL_RGBA, multisample );
         break;
     }
     init();
