@@ -63,7 +63,7 @@ public:
     virtual void mouseDragged(int x, int y, int button){}
     virtual void mouseReleased(int x, int y, int button){}
     
-    virtual void drawInterface( float & x, float & y, float & width, float & height ){};
+    virtual void drawInterface( int x, int y, int w, int h ){};
     
     // to be called inside the scene --------------------------------
     
@@ -117,23 +117,6 @@ protected:
 };
 
 
-// ---------------- np::Mode ----------------------------------------
-class Mode {
-
-public:
-
-    // methods to write: --------------------------------------------
-	virtual void draw(){}; 
-	
-    virtual void keyPressed( int key ){};
-    virtual void keyReleased( int key ){};
-    virtual void mousePressed(int x, int y, int button){}
-    virtual void mouseDragged(int x, int y, int button){}
-    virtual void mouseReleased(int x, int y, int button){}
-
-};
-
-
 // ------------------ np::SceneManager ------------------------------
 class SceneManager {
     
@@ -146,25 +129,20 @@ public:
     void next();
     void prev();
     
-    void addMode( Mode* modePointer );
-    void setMode( int i );
-    void nextMode();
-    void prevMode();
-
     void update();
     void draw();
+    void draw( int x, int y );
     void draw( int x, int y, int w, int h, bool frame=false );
     void draw( int x, int y, float scale, bool frame=false );
-    void draw( int x, int y );
     
-    void drawInterface();
+    void drawSceneInterface();
+    void drawSceneInterface( int x, int y, int w, int h );
 
     void keyPressed( ofKeyEventArgs & args );
     void keyReleased( ofKeyEventArgs & args );
     void mousePressed( ofMouseEventArgs & args );    
     void mouseReleased( ofMouseEventArgs & args );    
     void mouseDragged( ofMouseEventArgs & args );    
-    
     
     int getWidth() const { return width; };
     int getHeight() const { return height; };
@@ -173,7 +151,6 @@ private:
 
     bool bUseFbo;
     std::vector<Scene*> scenes;
-    std::vector<Mode*> modes;
    
     int current;
     int old;
@@ -182,8 +159,7 @@ private:
     std::vector<ofFbo> fbos;
     int width;
     int height;
-    
-    int mode;
+
 };    
 
 }

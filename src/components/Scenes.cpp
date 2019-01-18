@@ -133,14 +133,9 @@ void np::Scene::update(){
 np::SceneManager::SceneManager(){
     width = 0;
     height = 0;
-    modes.reserve(10);
-    modes.clear();
-    modes.push_back( nullptr );
-    mode = 0;
 }
 
 void np::SceneManager::setup( int w, int h, bool useFbo ){
-    
     bUseFbo = useFbo;
     width = w;
     height = h;
@@ -158,7 +153,6 @@ void np::SceneManager::setup( int w, int h, bool useFbo ){
     current = 0;
     old = 0;
     currentFbo = false;
-    
     
     int prio = 0; // OF_EVENT_PRIORITY_BEFORE_APP
     ofAddListener( ofEvents().keyPressed, this, &np::SceneManager::keyPressed, prio );
@@ -208,35 +202,6 @@ void np::SceneManager::next(){
     
 void np::SceneManager::prev(){
     set( current-1 );
-}
-
-void np::SceneManager::addMode( Mode* modePointer ){
-    modes.push_back( modePointer );
-}
-
-void np::SceneManager::setMode( int i ){
-    if( i<0 ){
-        i=0; 
-        ofLogError()<< "[np::SceneManager] mode index less than 0, setting to default (0).";
-    }else if( i>=int(modes.size()) ){
-        ofLogError()<< "[np::SceneManager] mode index greater than max, ignoring.";
-    }else{
-        mode = i;
-    }
-}
-
-void np::SceneManager::nextMode(){
-    mode++;
-    if( mode>=int(modes.size()) ){
-        mode = 0;
-    }
-}
-
-void np::SceneManager::prevMode(){
-    mode--;
-    if( mode<0 ){
-        mode = modes.size()-1;
-    }
 }
 
 void np::SceneManager::update(){
@@ -324,75 +289,44 @@ void np::SceneManager::draw( int x, int y ){
     }
 }
 
+void np::SceneManager::drawSceneInterface(){
+    if( scenes[current] != nullptr ){
+        scenes[current]->drawInterface( 0, 0, fbos[0].getWidth(), fbos[0].getHeight() );
+    }
+}
 
-void np::SceneManager::drawInterface(){
-    if( modes[mode] == nullptr ){
-        float x = 0.0f; 
-        float y = 0.0f;
-        float width = 0.0f;
-        float height = 0.0f;
-        
-        if( bUseFbo ){
-            width = fbos[0].getWidth();
-            height = fbos[0].getHeight();    
-        }
-        if( scenes[current] != nullptr ){
-            scenes[current]->drawInterface( x, y, width, height );
-        }
-        if( bUseFbo ){
-            draw( x, y, width, height, true );
-        }
-    }else{
-        modes[mode]->draw();
+void np::SceneManager::drawSceneInterface( int x, int y, int w, int h ){
+    if( scenes[current] != nullptr ){
+        scenes[current]->drawInterface( x, y, w, h );
     }
 }
 
 void np::SceneManager::keyPressed( ofKeyEventArgs & args ){
-    if( modes[mode] == nullptr ){
-        if( scenes[current] != nullptr ){
-            scenes[current]->keyPressed( args.key );
-        }      
-    }else{
-        modes[mode]->keyReleased( args.key ); 
-    }
+    if( scenes[current] != nullptr ){
+        scenes[current]->keyPressed( args.key );
+    }      
 }
 
 void np::SceneManager::keyReleased( ofKeyEventArgs & args ){
-    if( modes[mode] == nullptr ){
-        if( scenes[current] != nullptr ){
-            scenes[current]->keyReleased( args.key );
-        }      
-    }else{
-        modes[mode]->keyReleased( args.key ); 
-    }
+    if( scenes[current] != nullptr ){
+        scenes[current]->keyReleased( args.key );
+    }      
 }
 
 void np::SceneManager::mousePressed( ofMouseEventArgs & args ){
-    if( modes[mode] == nullptr ){
-        if( scenes[current] != nullptr ){
-            scenes[current]->mousePressed( args.x, args.y, args.button );
-        }
-    }else{
-        modes[mode]->mousePressed( args.x, args.y, args.button );      
+    if( scenes[current] != nullptr ){
+        scenes[current]->mousePressed( args.x, args.y, args.button );
     }
 }
 
 void np::SceneManager::mouseDragged( ofMouseEventArgs & args ){
-    if( modes[mode] == nullptr ){
-        if( scenes[current] != nullptr ){
-            scenes[current]->mouseDragged( args.x, args.y, args.button );        
-        }
-    }else{
-        modes[mode]->mouseDragged( args.x, args.y, args.button );    
+    if( scenes[current] != nullptr ){
+        scenes[current]->mouseDragged( args.x, args.y, args.button );        
     }
 }
 
 void np::SceneManager::mouseReleased( ofMouseEventArgs & args ){
-    if( modes[mode] == nullptr ){
-        if( scenes[current] != nullptr ){
-            scenes[current]->mouseReleased( args.x, args.y, args.button );       
-        }
-    }else{
-        modes[mode]->mouseReleased( args.x, args.y, args.button );  
+    if( scenes[current] != nullptr ){
+        scenes[current]->mouseReleased( args.x, args.y, args.button );       
     }
 }
