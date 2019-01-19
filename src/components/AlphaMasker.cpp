@@ -43,9 +43,9 @@ const std::string np::AlphaMasker::fragment = ALPHAMASKSHADERSOURCE(
     void main (void)
     {
         vec2 pos = texCoordVarying;
-        vec3 src = texture2D(tex0, pos).rgb;
+        vec4 src = texture2D(tex0, pos);
         float mask = texture2D(maskTex, pos).r;
-        gl_FragColor = vec4( src , mask);
+        gl_FragColor = vec4( src.rgb, mask * src.a );
     }
 ); //ALPHAMASKSHADERSOURCE end
 
@@ -60,10 +60,10 @@ const std::string np::AlphaMasker::fragment = "#version 120\n \
 		void main (void){\
 		vec2 pos = gl_TexCoord[0].st;\
 		\
-		vec3 src = texture2DRect(tex0, pos).rgb;\
+		vec4 src = texture2DRect(tex0, pos);\
 		float mask = texture2DRect(maskTex, pos).r;\
 		\
-		gl_FragColor = vec4( src , mask);\
+		gl_FragColor = vec4( src.rgb, mask * src.a );\
 		}";
 
 #endif
@@ -87,26 +87,8 @@ void np::AlphaMasker::draw( const ofFbo & source, const ofFbo & mask ) {
     if( initialized ){
         shader.begin();
         shader.setUniformTexture("maskTex", mask.getTexture(), 1 );
-        //ofSetColor(255);
+        //shader.setUniformTexture("maskTex", mask.getTexture(), mask.getTexture().getTextureData().textureID );
         source.draw( 0, 0 );
-        shader.end();
-    }else{
-        ofLogError()<<"[np::AlphaMasker] not initialized! call setup() or np::masker::init() before use";
-    }
-}
-
-
-void np::AlphaMasker::begin( const ofFbo & mask ) {
-    if( initialized ){
-        shader.begin();
-        shader.setUniformTexture("maskTex", mask.getTexture(), 1 );
-    }else{
-        ofLogError()<<"[np::AlphaMasker] not initialized! call setup() or np::masker::init() before use";
-    }
-}
-
-void np::AlphaMasker::end() {
-    if( initialized ){
         shader.end();
     }else{
         ofLogError()<<"[np::AlphaMasker] not initialized! call setup() or np::masker::init() before use";

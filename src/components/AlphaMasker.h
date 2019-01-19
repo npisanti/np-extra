@@ -38,8 +38,6 @@ public: // --------------- PUBLIC API ------------------------------------------
     // static functions, use np::masker wrapper for this, see down -------------
     static void init();
     static void draw( const ofFbo & source, const ofFbo & mask);
-    static void begin( const ofFbo & mask );
-    static void end();
 
 private:
     static ofShader        shader;
@@ -58,12 +56,6 @@ namespace np{
         inline void init(){ AlphaMasker::init(); }
         inline void draw( const ofFbo & source, const ofFbo & mask ){
             AlphaMasker::draw(source, mask);
-        }
-        inline void begin( const ofFbo & mask ){
-            AlphaMasker::begin( mask );
-        }
-        inline void end(){
-            AlphaMasker::end();
         }
     }
 }

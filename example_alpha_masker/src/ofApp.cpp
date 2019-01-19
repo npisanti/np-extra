@@ -5,7 +5,8 @@ void ofApp::setup(){
     canvas.allocate( ofGetWidth(), ofGetHeight() );
     mask.allocate( ofGetWidth(), ofGetHeight() );
     
-    np::masker::init();
+    np::masker::init(); // this have to go after the allocations 
+    
     ofBackground( 0 );
     select = 0;
 }
@@ -17,8 +18,12 @@ void ofApp::update(){
     canvas.begin();
     {
         ofClear( 0, 0, 0, 0 );
-        float x = ofGetWidth() * ofNoise( 0.0f, ofGetElapsedTimef()*0.2f );
-        ofDrawRectangle( 0, 0, x, ofGetHeight() );
+
+        for( int n=0; n<50; ++n ){
+            float x = ofRandom( ofGetWidth() );
+            float y = ofRandom( ofGetHeight() );            
+            ofDrawRectangle( x, y, 100, 20 );
+        }
     }
     canvas.end();
     
@@ -38,14 +43,7 @@ void ofApp::draw(){
         case 1: canvas.draw(0, 0); break;
         case 2: mask.draw(0, 0); break;
         default : 
-            np::masker::draw( canvas, mask );
-            /*
-            // the same
-            np::masker::begin( mask );
-                ofSetColor(255);
-                canvas.draw( 0, 0 );
-            np::masker::end();
-            */
+            np::masker::draw( canvas, mask );             
         break;
     }
 }

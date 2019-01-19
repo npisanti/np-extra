@@ -10,7 +10,7 @@ int main( ){
     settings.setSize( 640, 640 );
     ofCreateWindow(settings); 
 #else        
-	ofSetupOpenGL( 640, 640, OF_WINDOW);
+	ofSetupOpenGL( 1920, 1080, OF_WINDOW);
 #endif
 
 	ofRunApp( new ofApp());
