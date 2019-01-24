@@ -258,11 +258,11 @@ void np::SceneManager::draw( int x, int y, int w, int h, bool frame  ){
 
 void np::SceneManager::draw( int x, int y, float scale, bool frame ){
     if( bUseFbo ){
-        if( scenes[old] != nullptr && scenes[old]->running() ){
+        if( scenes[old] != nullptr && scenes[old]->isRunning() ){
             ofSetColor( 255, scenes[old]->alpha );
             fbos[!currentFbo].draw( x, y, fbos[!currentFbo].getWidth()*scale, fbos[!currentFbo].getHeight()*scale );
         }        
-        if( scenes[current] != nullptr && scenes[current]->running()  ){
+        if( scenes[current] != nullptr && scenes[current]->isRunning()  ){
             ofSetColor( 255, scenes[current]->alpha );
             fbos[currentFbo].draw( x, y, fbos[currentFbo].getWidth()*scale, fbos[currentFbo].getHeight()*scale );
         }  
@@ -278,11 +278,11 @@ void np::SceneManager::draw( int x, int y, float scale, bool frame ){
 
 void np::SceneManager::draw( int x, int y ){
     if( bUseFbo ){
-        if( scenes[old] != nullptr && scenes[old]->running() ){
+        if( scenes[old] != nullptr && scenes[old]->isRunning() ){
             ofSetColor( 255, scenes[old]->alpha );
             fbos[!currentFbo].draw( x, y );
         }
-        if( scenes[current] != nullptr && scenes[current]->running()  ){
+        if( scenes[current] != nullptr && scenes[current]->isRunning()  ){
             ofSetColor( 255, scenes[current]->alpha );
             fbos[currentFbo].draw( x, y );
         }

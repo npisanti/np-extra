@@ -79,7 +79,7 @@ public:
         return 1.0f;
     }
 
-    inline bool running(){ return (state!=Ended); }
+    inline bool isRunning(){ return (state!=Ended); }
     inline bool isBeginning(){ return state==Beginning; }
     inline bool isLooping(){ return state==Loop; }
     inline bool isEnding(){ return state==Ending; }
