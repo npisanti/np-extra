@@ -82,7 +82,7 @@ void ofApp::draw(){
         info += "c = close shape\n";
         info += "s = save\n";
         info += "l = load\n";
-        info += "ENTER = add polyline\n";
+        info += "SPACEBAR = add polyline\n";
         info += "BACKSPACE = remove polyline\n";
         info += "t = spotlight\n";
         info += "f = fill lines\n";
@@ -125,7 +125,7 @@ void ofApp::keyPressed(int key){
     
         case 'h': bShowHelp = !bShowHelp; break;
         
-        case OF_KEY_RETURN:
+        case ' ':
             lines.emplace_back();
             max = 0;
         break;
