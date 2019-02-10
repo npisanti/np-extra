@@ -84,6 +84,7 @@ public:
     inline bool isLooping(){ return state==Loop; }
     inline bool isEnding(){ return state==Ending; }
     inline bool isEnded() { return state==Ended; }
+    inline bool isRunning() { return state!=Ended; }
     
     // to avoid multiple scenes handling the same resources 
     inline bool resourcesAvailable(){ return state<2; } 
