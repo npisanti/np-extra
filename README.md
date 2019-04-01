@@ -7,6 +7,7 @@ Extra classes for openFrameworks. Includes:
 - Serialize and deserialize std::vector of glm::vec3, ofVec3f or ofPolyline.
 - `np::Playlist` class to load randomly videos on the fly.
 - `np::AlphaMasker` class to mask a source texture using a mask texture, can also be used with static methods as `np::masker::draw(...)`
+- `np::LiveParameters` link an ofParameterGroup to a JSON file and watches for changes to the file
 - Classes for managing Scenes and transitions between them.
 - functions for warping and transitioning between `ofPolyline`.
 

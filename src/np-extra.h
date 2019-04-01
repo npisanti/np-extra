@@ -8,6 +8,7 @@
 #include "components/AlphaMasker.h"
 #include "components/Mapping.h"
 #include "components/Scenes.h"
+#include "components/LiveParameters.h"
 
 #include "routines/serialize.h"
 #include "routines/polyworks.h"

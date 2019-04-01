@@ -1,8 +1,5 @@
 
-# custom exclusions for ofxPDSP
-
-mapping.xml
-
+example_live_parameters/bin/data/*
 
 # Some general ignore patterns
 
