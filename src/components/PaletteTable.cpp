@@ -3,6 +3,7 @@
 // Nicola Pisanti, MIT License, 2018
 
 #include "PaletteTable.h"
+#include "ofMain.h"
 
 void np::PaletteTable::setup ( int numPalettes, int numColors  ) {
     

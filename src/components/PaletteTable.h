@@ -1,7 +1,9 @@
 
 #pragma once
 
-#include "ofMain.h"
+#include "ofParameter.h"
+#include "ofParameterGroup.h"
+#include "ofColor.h"
 
 namespace np {
 
