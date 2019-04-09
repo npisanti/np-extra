@@ -15,15 +15,14 @@ public:
     
 private: 
     ofParameterGroup * parameters;
+    
     std::string path;
-
-    void reload();
-
-    // --- variables for live check ---
-    float interval;
-    time_t writeTimestamp;
-    float timePassed;
+    float interval = 0.05f;
+    time_t writeTimestamp = 0.0f;
+    float timePassed = 0.0f;;
+    
     void checkFile(ofEventArgs &args);
+    void reload();
 };
     
 }

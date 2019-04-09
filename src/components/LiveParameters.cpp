@@ -5,8 +5,6 @@
 #include "ofAppRunner.h"
 
 np::LiveParameters::LiveParameters(){
-    interval = 0.05f;
-    timePassed = 0.0f;
     parameters = nullptr;
 }
 
