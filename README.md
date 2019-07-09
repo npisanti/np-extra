@@ -11,6 +11,7 @@ Extra classes for openFrameworks. Includes:
 - `np::Playlist` class to load randomly videos on the fly.
 - `np::AlphaMasker` class to mask a source texture using a mask texture, can also be used with static methods as `np::masker::draw(...)`
 - `np::LiveParameters` link an ofParameterGroup to a JSON file and watches for changes to the file
+- `np::SpriteSheets` loads a .png horizontal spritesheet
 - Classes for managing Scenes and transitions between them.
 - functions for warping and transitioning between `ofPolyline`.
 
@@ -27,3 +28,4 @@ If you find this code useful, consider [fueling me with coffee](https://ko-fi.co
 License 
 ------------
 Nicola Pisanti, MIT License 2018.
+
