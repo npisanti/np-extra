@@ -1,5 +1,8 @@
 np-extra
 ==============
+[![Build status](https://travis-ci.org/npisanti/np-extra.svg?branch=master)](https://travis-ci.org/npisanti/np-extra) [![Build status](https://ci.appveyor.com/api/projects/status/wqie34342ep7d78l?svg=true)](https://ci.appveyor.com/project/npisanti/np-extra)
+
+
 Extra classes for openFrameworks. Includes:
 
 - `np::Phasor` class for cyclic animations.
