@@ -1,6 +1,43 @@
 
 #include "serialize.h"
 
+void np::serialize_floats( std::string path, const std::vector<float> & v ){
+    ofXml xml; 
+
+    for ( size_t i=0; i<v.size(); ++i ){
+        auto pt = xml.appendChild("number");
+        pt.setAttribute("value", v[i] );
+    }
+        
+    if( !xml.save( path ) ){
+        ofLogError()<< "error saving serialized points";
+    }
+}
+
+void np::deserialize_floats( std::string path, std::vector<float> & v ){
+    ofXml xml;
+
+    if( xml.load( path ) )  { 
+
+        auto numbers = xml.getChildren("number");
+
+        v.clear();        
+        int size = 0;
+        for( auto & num: numbers ){
+            size++; // don't worry about the warning here
+            // this is needed to allocate memory just once
+        }
+        v.reserve( size );
+        
+        for(auto & num: numbers){
+            float value = num.getAttribute("value").getFloatValue();
+            v.push_back( value );
+        }
+    }else{
+        ofLogError( "error loading xml file" );
+    }
+}
+
 void np::serialize_points( std::string path, const std::vector<glm::vec3> & v ) {
 
     ofXml xml; 
