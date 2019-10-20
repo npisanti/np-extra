@@ -14,7 +14,7 @@ void np::LiveParameters::watch( ofParameterGroup & parameters, std::string path 
     
     this->path = path;
     if( ! ofFilePath::isAbsolute( path )){
-        path = ofToDataPath( path );
+        path = ofFilePath::getCurrentWorkingDirectory() + "/" + path;
     }
 
     ofFile file( path );
